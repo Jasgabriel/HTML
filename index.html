@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ModaSphere | Login</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      background: linear-gradient(120deg, #9bb7ce, #d5f6fc);
+      color: #233e66;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 390px;
+      padding: 28px 34px 26px;
+      background: #d8e2ee;
+      border: 2px solid #174b6a;
+      border-radius: 28px;
+      box-shadow: 8px 12px 16px #00000035;
+      text-align: center;
+    }
+
+    .logo {
+      display: block;
+      width: 190px;
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto 10px;
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 27px;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 9px;
+      font-weight: bold;
+      font-style: italic;
+      letter-spacing: 1px;
+      margin-bottom: 22px;
+      color: #435b80;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .input-group input {
+      width: 100%;
+      height: 43px;
+      border: 2px solid #111;
+      border-radius: 25px;
+      padding: 0 43px 0 17px;
+      background: #fff;
+      color: #233e66;
+      font-size: 13px;
+      letter-spacing: 1px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .input-group input:focus {
+      border-color: #527c96;
+      box-shadow: 0 0 0 3px #779db633;
+    }
+
+    .input-group input::placeholder {
+      color: #344c72;
+      opacity: 1;
+    }
+
+    .field-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 19px;
+      color: #111;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      padding: 5px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 2px 15px;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .remember input {
+      width: 15px;
+      height: 15px;
+      accent-color: #50768e;
+      cursor: pointer;
+    }
+
+    a {
+      color: #304a70;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .login-btn {
+      width: 125px;
+      height: 40px;
+      border: 2px solid #111;
+      border-radius: 24px;
+      background: #6e91a5;
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .login-btn:hover {
+      background: #456e87;
+      transform: translateY(-1px);
+    }
+
+    .login-btn:active {
+      transform: scale(.97);
+    }
+
+    .signup {
+      margin-top: 16px;
+      font-size: 12px;
+      letter-spacing: .7px;
+    }
+
+    .message {
+      display: none;
+      margin: 0 0 12px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    dialog {
+      width: min(420px, calc(100% - 32px));
+      margin: auto;
+      padding: 24px;
+      border: 2px solid #174b6a;
+      border-radius: 20px;
+      color: #233e66;
+      box-shadow: 8px 12px 16px #00000035;
+    }
+
+    dialog::backdrop {
+      background: #00000066;
+    }
+
+    dialog h2 {
+      margin-bottom: 12px;
+      font-family: Georgia, serif;
+    }
+
+    dialog p {
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    dialog label {
+      display: block;
+      margin: 12px 0 5px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    dialog input {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid #174b6a;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .dialog-actions button {
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid #174b6a;
+      border-radius: 18px;
+      background: #6e91a5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .dialog-actions .secondary {
+      background: white;
+      color: #233e66;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 14px;
+      }
+
+      .login-card {
+        padding: 25px 22px;
+      }
+
+      .options {
+        font-size: 10px;
+        letter-spacing: .4px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="login-card">
+    <img class="logo" src="assets/images/modasphere-logo.png" alt="ModaSphere coming soon globe logo">
+
+    <h1>LOG IN</h1>
+
+    <p class="subtitle">
+      WELCOME BACK! PLEASE LOG IN TO YOUR ACCOUNT
+    </p>
+
+    <form id="loginForm">
+      <div class="input-group">
+        <input
+          type="text"
+          id="username"
+          placeholder="Username"
+          aria-label="Username"
+          autocomplete="username"
+          required
+        >
+        <span class="field-icon" aria-hidden="true">♙</span>
+      </div>
+
+      <div class="input-group">
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
+          aria-label="Password"
+          autocomplete="current-password"
+          required
+        >
+        <button
+          type="button"
+          class="password-toggle"
+          id="togglePassword"
+          aria-label="Show password"
+          aria-pressed="false"
+        >◉</button>
+      </div>
+
+      <div class="options">
+        <label class="remember">
+          <input type="checkbox" id="remember">
+          <span>Remember username</span>
+        </label>
+
+        <a href="#" id="forgotLink">Forgot password</a>
+      </div>
+
+      <p class="message" id="message" role="status" aria-live="polite"></p>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <p class="signup">
+      Dont have an account?
+      <a href="signup.html">Signup</a>
+    </p>
+  </main>
+
+  <dialog id="passwordDialog" aria-labelledby="passwordDialogTitle">
+    <form id="passwordChangeForm">
+      <h2 id="passwordDialogTitle">Change password</h2>
+      <p>Enter your current password, then choose a new password. Your current password is required to verify the account.</p>
+      <label for="currentPassword">Current password</label>
+      <input id="currentPassword" type="password" autocomplete="current-password" required>
+      <label for="newPassword">New password</label>
+      <input id="newPassword" type="password" autocomplete="new-password" minlength="8" required>
+      <label for="confirmNewPassword">Confirm new password</label>
+      <input id="confirmNewPassword" type="password" autocomplete="new-password" minlength="8" required>
+      <p class="message" id="passwordChangeMessage" role="status" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button class="secondary" type="button" id="cancelPasswordChange">Cancel</button>
+        <button type="submit">Update password</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="assets/scripts/auth.js"></script>
+  <script>
+    const form = document.getElementById("loginForm");
+    const username = document.getElementById("username");
+    const password = document.getElementById("password");
+    const remember = document.getElementById("remember");
+    const togglePassword = document.getElementById("togglePassword");
+    const message = document.getElementById("message");
+    const passwordDialog = document.getElementById("passwordDialog");
+    const passwordChangeForm = document.getElementById("passwordChangeForm");
+    const passwordChangeMessage = document.getElementById("passwordChangeMessage");
+    const rememberedUsernameKey = "modasphere.rememberedUsername";
+
+    function showMessage(text) {
+      message.textContent = text;
+      message.classList.add("show");
+    }
+
+    function showPasswordChangeMessage(text) {
+      passwordChangeMessage.textContent = text;
+      passwordChangeMessage.classList.add("show");
+    }
+
+    try {
+      const rememberedUsername = localStorage.getItem(rememberedUsernameKey);
+      if (rememberedUsername) {
+        username.value = rememberedUsername;
+        remember.checked = true;
+      }
+    } catch (error) {
+      showMessage(`Could not load your saved username: ${error.message}`);
+    }
+
+    remember.addEventListener("change", () => {
+      if (!remember.checked) {
+        try {
+          localStorage.removeItem(rememberedUsernameKey);
+        } catch (error) {
+          showMessage(`Could not remove your saved username: ${error.message}`);
+        }
+      }
+    });
+
+    togglePassword.addEventListener("click", () => {
+      const showing = password.type === "text";
+
+      password.type = showing ? "password" : "text";
+      togglePassword.textContent = showing ? "◉" : "◎";
+      togglePassword.setAttribute(
+        "aria-label",
+        showing ? "Show password" : "Hide password"
+      );
+      togglePassword.setAttribute("aria-pressed", String(!showing));
+    });
+
+    const registrationComplete = new URLSearchParams(window.location.search)
+      .get("registered") === "1";
+    if (registrationComplete) {
+      showMessage("Account created. Please log in with your new username and password.");
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const user = username.value.trim();
+      const pass = password.value;
+
+      if (!user || !pass) {
+        showMessage("Please enter your username and password.");
+        return;
+      }
+
+      try {
+        const authenticated = await window.ModaSphereAuth.authenticate(user, pass);
+        if (authenticated && remember.checked) {
+          localStorage.setItem(rememberedUsernameKey, user);
+        } else if (!remember.checked) {
+          localStorage.removeItem(rememberedUsernameKey);
+        }
+
+        if (authenticated) {
+          window.location.href = "home.html";
+          return;
+        }
+
+        showMessage(
+          "Incorrect username or password. Please try again."
+        );
+      } catch (error) {
+        showMessage(`Could not complete login: ${error.message}`);
+      }
+    });
+
+    document.getElementById("forgotLink").addEventListener("click", (event) => {
+      event.preventDefault();
+      passwordChangeMessage.textContent = "";
+      passwordChangeMessage.classList.remove("show");
+      document.getElementById("currentPassword").value = "";
+      document.getElementById("newPassword").value = "";
+      document.getElementById("confirmNewPassword").value = "";
+      passwordDialog.showModal();
+      document.getElementById("currentPassword").focus();
+    });
+
+    document.getElementById("cancelPasswordChange").addEventListener("click", () => {
+      passwordDialog.close();
+    });
+
+    passwordChangeForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const newPassword = document.getElementById("newPassword").value;
+      const confirmNewPassword = document.getElementById("confirmNewPassword").value;
+      if (newPassword !== confirmNewPassword) {
+        showPasswordChangeMessage("The new passwords do not match.");
+        document.getElementById("confirmNewPassword").focus();
+        return;
+      }
+
+      try {
+        const changed = await window.ModaSphereAuth.changePassword(
+          username.value.trim(),
+          document.getElementById("currentPassword").value,
+          newPassword
+        );
+
+        if (!changed) {
+          showPasswordChangeMessage("Username or current password is incorrect.");
+          return;
+        }
+
+        passwordDialog.close();
+        password.value = "";
+        showMessage("Password updated. Log in with your new password.");
+      } catch (error) {
+        showPasswordChangeMessage(`Could not update your password: ${error.message}`);
+      }
+    });
+  </script>
+</body>
+</html>

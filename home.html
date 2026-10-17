@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ModaSphere | Home</title>
+  <link rel="stylesheet" href="assets/styles/basket.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #263d68;
+      --teal: #064565;
+      --cream: #fff8e9;
+      --ink: #283f69;
+      --line: #344d7d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .storefront {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 14px clamp(18px, 6vw, 80px) 20px;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .toolbar {
+      position: relative;
+      z-index: 2;
+      min-height: 51px;
+      padding: 0 3px 6px;
+      display: grid;
+      grid-template-columns: 42px 155px minmax(180px, 1fr) 42px;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      width: 38px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .brand img {
+      width: 54px;
+      max-width: none;
+      height: auto;
+    }
+
+    .toolbar-button,
+    .icon-button {
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .toolbar-button {
+      min-height: 40px;
+      font-size: 16px;
+      letter-spacing: 2px;
+      text-align: left;
+    }
+
+    .toolbar-button:hover,
+    .toolbar-button[aria-expanded="true"] {
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
+
+    .search-form {
+      height: 39px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #1e2430;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .search-form svg {
+      width: 21px;
+      height: 21px;
+      flex: 0 0 auto;
+    }
+
+    .search-form input {
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 22px;
+      letter-spacing: 4px;
+    }
+
+    .search-form input::placeholder {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .clear-search {
+      padding: 2px;
+      border: 0;
+      background: transparent;
+      color: #141c2a;
+      font-size: 21px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .icon-button {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+    }
+
+    .icon-button svg {
+      width: 27px;
+      height: 27px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.8;
+    }
+
+    .categories-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 3px;
+      right: 3px;
+      max-height: calc(100vh - 150px);
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      align-items: stretch;
+      align-content: start;
+      overflow-x: hidden;
+      overflow-y: auto;
+      gap: 12px;
+      border: 1px solid #d7e1ed;
+      border-radius: 26px;
+      background: #f4f7fb;
+      box-shadow: 0 18px 38px #07162d38, 0 3px 8px #07162d1f;
+      opacity: 0;
+      transform: translateY(-10px) scale(.985);
+      transform-origin: top center;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 220ms ease,
+        transform 260ms cubic-bezier(.2, .8, .2, 1),
+        visibility 0s linear 260ms;
+    }
+
+    .categories-menu[data-open="true"] {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      visibility: visible;
+      pointer-events: auto;
+      transition-delay: 0s;
+    }
+
+    .menu-search-form {
+      grid-column: 1 / -1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-search-form input {
+      width: 100%;
+      min-width: 0;
+      height: 38px;
+      padding: 0 12px;
+      border: 1px solid #d2dce7;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      outline-color: var(--teal);
+    }
+
+    .menu-search-form button {
+      min-height: 38px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--navy);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .menu-search-status {
+      grid-column: 1 / -1;
+      margin: -5px 2px 0;
+      color: #526581;
+      font-size: 12px;
+    }
+
+    .menu-search-status:empty {
+      display: none;
+    }
+
+    .category-card[hidden],
+    .category-options button[hidden] {
+      display: none;
+    }
+
+    .category-card {
+      min-width: 0;
+      min-height: 190px;
+      width: 100%;
+      padding: 17px 13px;
+      border: 1px solid #e1e7ef;
+      border-radius: 19px;
+      background: #fff;
+      box-shadow: 0 3px 10px #19395c0d;
+      transition: transform 220ms ease, box-shadow 220ms ease;
+      overflow-wrap: anywhere;
+    }
+
+    .category-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 9px 18px #19395c1a;
+    }
+
+    .category-card h2 {
+      min-height: 30px;
+      margin: 0 0 12px;
+      padding-bottom: 9px;
+      border-bottom: 1px solid #e8edf3;
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: .7px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .category-options {
+      display: grid;
+      gap: 5px;
+    }
+
+    .category-options button {
+      width: 100%;
+      min-width: 0;
+      padding: 6px 7px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #36445b;
+      font-size: 14px;
+      line-height: 1.3;
+      text-align: left;
+      cursor: pointer;
+      overflow-wrap: anywhere;
+      transition: color 160ms ease, background-color 160ms ease, padding-left 160ms ease;
+    }
+
+    .category-options button:hover,
+    .category-options button:focus-visible {
+      color: var(--teal);
+      background: #e8f1f5;
+      padding-left: 11px;
+      outline: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+
+    .hero {
+      min-height: 390px;
+      margin: 28px 0 42px;
+      padding: clamp(25px, 5vw, 64px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 28px;
+      overflow: hidden;
+      border-radius: 26px;
+      background: #e8e3d7;
+    }
+
+    .hero-copy {
+      max-width: 520px;
+    }
+
+    .hero-eyebrow,
+    .featured-eyebrow {
+      margin: 0 0 12px;
+      color: #53647d;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0;
+      color: #1d2e4c;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 6.5vw, 78px);
+      font-weight: normal;
+      letter-spacing: -2px;
+      line-height: .98;
+    }
+
+    .hero-description {
+      max-width: 390px;
+      margin: 20px 0 24px;
+      color: #465875;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-actions a,
+    .hero-actions button {
+      min-height: 44px;
+      padding: 0 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--navy);
+      border-radius: 24px;
+      background: var(--navy);
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .hero-actions a.secondary {
+      background: transparent;
+      color: var(--navy);
+    }
+
+    .hero-actions a:hover,
+    .hero-actions button:hover {
+      background: #354f7e;
+      color: #fff;
+    }
+
+    .hero-visual {
+      min-height: 300px;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #d9d4c8;
+    }
+
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      max-height: 370px;
+      display: block;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+    }
+
+    .featured-section {
+      margin: 0 auto 44px;
+      width: min(100%, 1120px);
+    }
+
+    .featured-heading {
+      margin-bottom: 18px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .featured-heading h2 {
+      margin: 0;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(27px, 4vw, 38px);
+      font-weight: normal;
+    }
+
+    .featured-heading a {
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: bold;
+      text-underline-offset: 4px;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .featured-product {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid #e5e3db;
+      border-radius: 16px;
+      background: #fffdf8;
+      box-shadow: 0 6px 18px #263d6812;
+    }
+
+    .featured-product > a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .featured-product img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: block;
+      object-fit: cover;
+      background: #f0f1ef;
+    }
+
+    .featured-product-info {
+      padding: 14px;
+    }
+
+    .featured-product h3 {
+      min-height: 40px;
+      margin: 0 0 7px;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+      font-weight: normal;
+      line-height: 1.25;
+    }
+
+    .featured-product p {
+      margin: 0 0 12px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .featured-product .add-to-basket {
+      width: 100%;
+      min-height: 40px;
+      font-size: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 18%;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .footer-links button {
+      padding: 4px;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    dialog {
+      width: min(400px, calc(100% - 32px));
+      margin: auto;
+      padding: 24px;
+      border: 2px solid var(--line);
+      border-radius: 20px;
+      color: var(--ink);
+      background: var(--cream);
+    }
+
+    .info-dialog {
+      width: min(760px, calc(100% - 36px));
+      max-height: min(82vh, 620px);
+      padding: 0;
+      overflow: auto;
+      border: 0;
+      border-radius: 14px;
+      background: transparent;
+      box-shadow: 0 18px 50px #07162d55;
+    }
+
+    .info-dialog h2 {
+      width: fit-content;
+      min-width: 250px;
+      margin: 0 0 16px;
+      padding: 4px 16px 5px;
+      border-radius: 0 12px 12px 0;
+      background: var(--navy);
+      color: #d4dfeb;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 34px;
+      font-weight: bold;
+      line-height: 1.1;
+    }
+
+    .about-copy {
+      padding: 16px 24px;
+      border-radius: 12px;
+      background: var(--navy);
+      color: #f5f1e7;
+      text-align: center;
+    }
+
+    .about-copy p {
+      margin: 0 0 12px;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: .55px;
+      line-height: 1.55;
+      text-transform: uppercase;
+    }
+
+    .about-copy p:last-child {
+      margin-bottom: 0;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px 11%;
+      align-items: center;
+      padding: 0 1px;
+    }
+
+    .contact-card {
+      min-height: 88px;
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: var(--navy);
+      color: #f5f1e7;
+      text-align: center;
+    }
+
+    .contact-card:nth-child(even) {
+      transform: translateY(9px);
+    }
+
+    .contact-card strong {
+      margin-bottom: 3px;
+      font-size: 13px;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+
+    .contact-card a,
+    .contact-card span {
+      color: inherit;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: .8px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+      text-decoration: none;
+    }
+
+    .contact-card a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .info-dialog .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin: 14px 2px 0;
+    }
+
+    dialog::backdrop {
+      background: #07162d99;
+    }
+
+    dialog h2 {
+      margin-top: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: normal;
+    }
+
+    dialog p {
+      line-height: 1.5;
+    }
+
+    .dialog-close {
+      min-height: 38px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--navy);
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 700px) {
+      .storefront {
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 12px 16px 20px;
+      }
+
+      .toolbar {
+        grid-template-columns: 36px 112px minmax(90px, 1fr) 36px;
+        gap: 7px;
+      }
+
+      .toolbar-button {
+        font-size: 13px;
+        letter-spacing: 1px;
+      }
+
+      .search-form {
+        gap: 5px;
+        padding: 0 6px;
+      }
+
+      .search-form input {
+        font-size: 16px;
+        letter-spacing: 2px;
+      }
+
+      .categories-menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-height: min(65vh, 430px);
+        gap: 9px;
+        padding: 10px;
+      }
+
+      .category-card {
+        min-height: auto;
+        padding: 15px 12px;
+      }
+
+      .category-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .hero {
+        min-height: 0;
+        margin: 20px 0 34px;
+        padding: 24px;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .hero-visual {
+        min-height: 240px;
+      }
+
+      .featured-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .footer-links {
+        padding: 0 8%;
+      }
+
+      .info-dialog h2 {
+        min-width: 0;
+        font-size: 30px;
+      }
+
+      .about-copy {
+        padding: 15px;
+      }
+
+      .about-copy p {
+        font-size: 11px;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .contact-card,
+      .contact-card:nth-child(even) {
+        min-height: 70px;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .toolbar {
+        grid-template-columns: 30px 92px minmax(75px, 1fr) 30px;
+        gap: 4px;
+      }
+
+      .brand img {
+        width: 46px;
+      }
+
+      .toolbar-button {
+        font-size: 11px;
+        letter-spacing: .5px;
+      }
+
+      .search-form input {
+        font-size: 14px;
+      }
+
+      .hero {
+        padding: 18px;
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 220px;
+        max-height: 260px;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+      }
+
+      .featured-heading {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .featured-product-info {
+        padding: 10px;
+      }
+
+      .featured-product h3 {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="storefront">
+    <header class="toolbar">
+      <a class="brand" href="home.html" aria-label="ModaSphere home">
+        <img src="assets/images/modasphere-logo.png" alt="">
+      </a>
+
+      <button
+        class="toolbar-button"
+        id="categoriesButton"
+        type="button"
+        aria-expanded="false"
+        aria-controls="categoriesMenu"
+      >CATEGORIES</button>
+
+      <form class="search-form" id="searchForm" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.8" cy="10.8" r="6.8" fill="none" stroke="currentColor" stroke-width="3"></circle>
+          <path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-width="3"></path>
+        </svg>
+        <input id="searchInput" type="search" placeholder="SEARCH" aria-label="Search categories">
+        <button class="clear-search" id="clearSearch" type="button" aria-label="Clear search">×</button>
+      </form>
+
+      <button class="icon-button" data-bag-button type="button" aria-label="Shopping bag">
+        <svg viewBox="0 0 28 30" aria-hidden="true">
+          <path d="M5 10h18l1 17H4l1-17Z"></path>
+          <path d="M10 11V7a4 4 0 0 1 8 0v4"></path>
+        </svg>
+        <span class="basket-count" hidden>0</span>
+      </button>
+
+      <nav class="categories-menu" id="categoriesMenu" aria-label="Product categories" hidden inert>
+        <form class="menu-search-form" id="menuSearchForm" role="search">
+          <input id="menuSearchInput" type="search" placeholder="Search all categories" aria-label="Search all categories">
+          <button type="submit">Search</button>
+        </form>
+        <p class="menu-search-status" id="menuSearchStatus" aria-live="polite"></p>
+        <section class="category-card">
+          <h2>New &amp; Trending</h2>
+          <div class="category-options">
+            <button type="button">New Arrivals</button>
+            <button type="button">VIP</button>
+          </div>
+        </section>
+        <section class="category-card">
+          <h2>Shoes</h2>
+          <div class="category-options">
+            <button type="button">Running</button>
+            <button type="button">Originals</button>
+            <button type="button">Formal</button>
+          </div>
+        </section>
+        <section class="category-card">
+          <h2>Clothing</h2>
+          <div class="category-options">
+            <button type="button">T-Shirts &amp; Tank Tops</button>
+            <button type="button">Dress</button>
+            <button type="button">Shorts</button>
+            <button type="button">Pants</button>
+            <button type="button">Jackets</button>
+          </div>
+        </section>
+        <section class="category-card">
+          <h2>Accessories</h2>
+          <div class="category-options">
+            <button type="button">Bags</button>
+            <button type="button">Hats</button>
+            <button type="button">Socks</button>
+          </div>
+        </section>
+        <section class="category-card">
+          <h2>Sale</h2>
+          <div class="category-options">
+            <button type="button">Shoes</button>
+            <button type="button">Clothing</button>
+            <button type="button">Accessories</button>
+          </div>
+        </section>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">The ModaSphere edit / 2026</p>
+        <h1 id="heroTitle">Find your<br>next favorite.</h1>
+        <p class="hero-description">Fresh layers and everyday icons, selected to help you make your own statement.</p>
+        <div class="hero-actions">
+          <button
+            class="add-to-basket"
+            type="button"
+            data-add-to-basket
+            data-product-id="black-leather-jacket"
+            data-product-name="Black Leather Jacket"
+            data-product-price="4500"
+            data-product-image="assets/images/black-leather-jacket.png"
+          >Shop the spotlight</button>
+          <a class="secondary" href="category.html?group=Clothing&amp;category=Jackets">Explore jackets</a>
+        </div>
+      </div>
+      <a class="hero-visual" href="category.html?group=Clothing&amp;category=Jackets" aria-label="Explore black leather jackets">
+        <img src="assets/images/black-leather-jacket.png" alt="Black Leather Jacket">
+      </a>
+    </section>
+
+    <section class="featured-section" aria-labelledby="featuredTitle">
+      <div class="featured-heading">
+        <div>
+          <p class="featured-eyebrow">Picked for you</p>
+          <h2 id="featuredTitle">Featured pieces</h2>
+        </div>
+        <a href="category.html?group=New%20%26%20Trending&amp;category=New%20Arrivals">Shop new arrivals</a>
+      </div>
+      <div class="featured-grid">
+        <article class="featured-product">
+          <a href="category.html?group=Shoes&amp;category=Originals">
+            <img src="assets/images/white-blue-retro-sneakers.png" alt="White and Blue Retro Sneakers" loading="lazy">
+          </a>
+          <div class="featured-product-info">
+            <h3>White and Blue Retro Sneakers</h3>
+            <p>₱2,700</p>
+            <button class="add-to-basket" type="button" data-add-to-basket data-product-id="white-blue-retro-sneakers" data-product-name="White and Blue Retro Sneakers" data-product-price="2700" data-product-image="assets/images/white-blue-retro-sneakers.png">Add to basket</button>
+          </div>
+        </article>
+        <article class="featured-product">
+          <a href="category.html?group=Clothing&amp;category=Dress">
+            <img src="assets/images/burgundy-spaghetti-strap-dress.png" alt="Burgundy Spaghetti-Strap Dress" loading="lazy">
+          </a>
+          <div class="featured-product-info">
+            <h3>Burgundy Spaghetti-Strap Dress</h3>
+            <p>₱2,450</p>
+            <button class="add-to-basket" type="button" data-add-to-basket data-product-id="burgundy-spaghetti-strap-dress" data-product-name="Burgundy Spaghetti-Strap Dress" data-product-price="2450" data-product-image="assets/images/burgundy-spaghetti-strap-dress.png">Add to basket</button>
+          </div>
+        </article>
+        <article class="featured-product">
+          <a href="category.html?group=Clothing&amp;category=Shorts">
+            <img src="assets/images/mint-striped-shorts.png" alt="Mint Striped Shorts" loading="lazy">
+          </a>
+          <div class="featured-product-info">
+            <h3>Mint Striped Shorts</h3>
+            <p>₱1,250</p>
+            <button class="add-to-basket" type="button" data-add-to-basket data-product-id="mint-striped-shorts" data-product-name="Mint Striped Shorts" data-product-price="1250" data-product-image="assets/images/mint-striped-shorts.png">Add to basket</button>
+          </div>
+        </article>
+        <article class="featured-product">
+          <a href="category.html?group=Accessories&amp;category=Bags">
+            <img src="assets/images/espresso-oversized-tote.png" alt="Espresso Oversized Tote" loading="lazy">
+          </a>
+          <div class="featured-product-info">
+            <h3>Espresso Oversized Tote</h3>
+            <p>₱2,800</p>
+            <button class="add-to-basket" type="button" data-add-to-basket data-product-id="espresso-oversized-tote" data-product-name="Espresso Oversized Tote" data-product-price="2800" data-product-image="assets/images/espresso-oversized-tote.png">Add to basket</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer-links">
+      <button type="button" data-dialog="aboutDialog">ABOUT US</button>
+      <button type="button" data-dialog="contactDialog">CONTACT US</button>
+    </footer>
+  </main>
+
+  <dialog class="basket-dialog" id="basketDialog" aria-labelledby="basketTitle">
+    <header class="basket-header">
+      <h2 id="basketTitle">Your basket</h2>
+      <button type="button" data-close-basket aria-label="Close basket">×</button>
+    </header>
+    <p class="basket-empty" id="basketEmpty">Your basket is empty. Choose a category to explore the collection.</p>
+    <div class="basket-items" id="basketItems" hidden></div>
+    <p class="basket-status" id="basketStatus" role="status" aria-live="polite"></p>
+    <footer class="basket-footer">
+      <button class="basket-clear" type="button" data-clear-basket>Clear basket</button>
+      <strong class="basket-total" id="basketTotal">₱0</strong>
+    </footer>
+    <a class="basket-checkout" data-go-checkout href="checkout.html">Continue to checkout</a>
+    <div class="dialog-actions">
+      <button class="dialog-close" type="button" data-close-basket>Close</button>
+    </div>
+  </dialog>
+
+  <dialog class="info-dialog" id="aboutDialog" aria-labelledby="aboutTitle">
+    <h2 id="aboutTitle">About Us</h2>
+    <div class="about-copy">
+      <p>Welcome to ModaSphere, an e-commerce destination for people who want to discover stylish, comfortable, and affordable fashion in one place. We believe fashion is a way to express your personality and confidence.</p>
+      <p>At ModaSphere, we offer a variety of clothing, accessories, and fashion essentials to fit different styles and preferences. Our goal is to make online shopping simple, convenient, and enjoyable for everyone.</p>
+      <p>We are committed to providing quality products, easy browsing, and a smooth shopping experience. Whether you are looking for casual, trendy, or special-occasion styles, ModaSphere is here to help you find your style.</p>
+      <p>ModaSphere: discover your style, express yourself.</p>
+    </div>
+    <div class="dialog-actions">
+      <button class="dialog-close" type="button">Close</button>
+    </div>
+  </dialog>
+
+  <dialog class="info-dialog" id="contactDialog" aria-labelledby="contactTitle">
+    <h2 id="contactTitle">Contact Us</h2>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <strong>Facebook:</strong>
+        <span>ModaSphere Official</span>
+      </div>
+      <div class="contact-card">
+        <strong>E-mail:</strong>
+        <a href="mailto:modasphere@gmail.com">modasphere@gmail.com</a>
+      </div>
+      <div class="contact-card">
+        <strong>Instagram:</strong>
+        <a href="https://www.instagram.com/modasphere.offcl.811/" target="_blank" rel="noopener noreferrer">@modasphere.offcl.811</a>
+      </div>
+      <div class="contact-card">
+        <strong>Contact Number:</strong>
+        <a href="tel:+639175552026">+63 917 555 2026</a>
+      </div>
+    </div>
+    <div class="dialog-actions">
+      <button class="dialog-close" type="button">Close</button>
+    </div>
+  </dialog>
+
+  <script src="assets/scripts/categories.js"></script>
+  <script>
+    document.querySelectorAll("[data-dialog]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.getElementById(button.dataset.dialog).showModal();
+      });
+    });
+
+    document.querySelectorAll("dialog .dialog-close").forEach((button) => {
+      button.addEventListener("click", () => {
+        button.closest("dialog").close();
+      });
+    });
+
+  </script>
+  <script src="assets/scripts/basket.js"></script>
+</body>
+</html>
