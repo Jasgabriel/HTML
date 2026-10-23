@@ -55,6 +55,7 @@
   min-width: 38px;
   padding: 0 10px;
   font-size: 20px;
+  transform: translateY(4px);
 }
 
 .basket-items {

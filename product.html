@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore fashion and accessories from the ModaSphere collection.">
+  <title>ModaSphere | Product details</title>
+  <link rel="stylesheet" href="assets/styles/basket.css">
+  <link rel="stylesheet" href="assets/styles/premium.css">
+</head>
+<body>
+  <main class="page product-page">
+    <header class="toolbar product-toolbar">
+      <a class="brand" href="home.html" aria-label="ModaSphere home">
+        <img src="assets/images/modasphere-logo-brand.png" alt="">
+      </a>
+      <a class="home-link" href="home.html">SHOP</a>
+      <p class="product-toolbar-label">THE MODASPHERE EDIT</p>
+      <button class="bag-button" data-bag-button type="button" aria-label="Shopping bag">
+        <svg viewBox="0 0 28 30" aria-hidden="true">
+          <path d="M5 10h18l1 17H4l1-17Z"></path>
+          <path d="M10 11V7a4 4 0 0 1 8 0v4"></path>
+        </svg>
+        <span class="basket-count" hidden>0</span>
+      </button>
+    </header>
+
+    <p class="product-breadcrumb"><a href="home.html">Shop</a><span>/</span><a id="productCategoryLink" href="category.html">Collection</a><span>/</span><span id="productBreadcrumbName">Piece</span></p>
+    <section class="product-detail" aria-labelledby="productName">
+      <div class="product-detail-image">
+        <img id="productImage" alt="" fetchpriority="high">
+      </div>
+      <div class="product-detail-copy">
+        <p class="product-detail-eyebrow" id="productGroup"></p>
+        <h1 id="productName">Loading product…</h1>
+        <p class="product-detail-price" id="productPrice"></p>
+        <p class="product-description" id="productDescription"></p>
+        <p class="product-availability">Online stock status is not available. Contact the store for current availability.</p>
+        <div class="product-options">
+          <label class="product-size-field" for="productSize">
+            <span>Size</span>
+            <select id="productSize"></select>
+          </label>
+          <fieldset class="product-color-field">
+            <legend>Color: <span id="selectedColorName"></span></legend>
+            <div class="product-color-options" id="productColorOptions"></div>
+          </fieldset>
+          <p class="product-option-note">Displayed size and color choices are not connected to live stock. Colors do not have separate photos, and the listed price stays the same for each option.</p>
+        </div>
+        <button class="add-to-basket product-add-button" id="productAddButton" type="button" data-add-to-basket>Add to basket</button>
+        <button class="favorite-toggle product-favorite" id="productFavorite" type="button" aria-pressed="false">♡ Save to favorites</button>
+        <div class="product-information">
+          <details>
+            <summary>Materials and care</summary>
+            <p id="productCare"></p>
+          </details>
+          <details>
+            <summary>Fit and sizing</summary>
+            <p id="productFit"></p>
+          </details>
+          <details>
+            <summary>Delivery and returns</summary>
+            <p id="productDelivery"></p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="product-reviews" aria-labelledby="reviewsTitle">
+      <p class="product-detail-eyebrow">COMMUNITY</p>
+      <h2 id="reviewsTitle">Customer reviews</h2>
+      <div class="reviews-empty">
+        <strong>No customer reviews yet</strong>
+        <p>Be the first to rate this piece. Your review preview stays on this page and is not published or saved.</p>
+      </div>
+      <form class="review-form" id="reviewForm">
+        <fieldset class="review-rating">
+          <legend>Your rating</legend>
+          <div class="review-stars" role="group" aria-label="Choose a star rating">
+            <button type="button" aria-label="1 star" aria-pressed="false">☆</button>
+            <button type="button" aria-label="2 stars" aria-pressed="false">☆</button>
+            <button type="button" aria-label="3 stars" aria-pressed="false">☆</button>
+            <button type="button" aria-label="4 stars" aria-pressed="false">☆</button>
+            <button type="button" aria-label="5 stars" aria-pressed="false">☆</button>
+          </div>
+        </fieldset>
+        <label class="review-comment" for="reviewComment">
+          Your review
+          <textarea id="reviewComment" rows="4" maxlength="600" placeholder="Share what you think about this piece"></textarea>
+        </label>
+        <button class="review-submit" type="submit">Preview your review</button>
+        <p class="review-status" id="reviewStatus" role="status" aria-live="polite"></p>
+      </form>
+      <div class="review-preview" id="reviewPreview" aria-live="polite" hidden></div>
+    </section>
+
+    <footer class="product-footer">
+      <a href="home.html">Continue browsing</a>
+      <a href="mailto:modasphere@gmail.com">Contact the store</a>
+      <span>Online preview — purchases are not processed and no shipment is created.</span>
+    </footer>
+    <p class="product-status" id="productStatus" role="status" aria-live="polite"></p>
+  </main>
+
+  <p class="basket-toast" id="addToBasketToast" role="status" aria-live="polite" aria-atomic="true"></p>
+  <dialog class="basket-dialog" id="basketDialog" aria-labelledby="basketTitle">
+    <header class="basket-header">
+      <h2 id="basketTitle">Your basket</h2>
+      <button type="button" data-close-basket aria-label="Close basket">×</button>
+    </header>
+    <p class="basket-empty" id="basketEmpty">Your basket is empty. Explore the collection to find a piece you love.</p>
+    <div class="basket-items" id="basketItems" hidden></div>
+    <p class="basket-status" id="basketStatus" role="status" aria-live="polite"></p>
+    <footer class="basket-footer">
+      <button class="basket-clear" type="button" data-clear-basket>Clear basket</button>
+      <strong class="basket-total" id="basketTotal">₱0</strong>
+    </footer>
+    <a class="basket-checkout" data-go-checkout href="checkout.html">Continue to checkout</a>
+    <div class="dialog-actions"><button class="dialog-close" type="button" data-close-basket>Close</button></div>
+  </dialog>
+
+  <script src="assets/scripts/product-catalog.js"></script>
+  <script src="assets/scripts/basket.js"></script>
+  <script src="assets/scripts/product-detail.js"></script>
+  <script src="assets/scripts/wishlist.js"></script>
+</body>
+</html>

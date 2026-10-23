@@ -396,7 +396,7 @@
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: cover;
+      object-fit: contain;
     }
 
     .sale-badge {
@@ -465,7 +465,7 @@
       }
 
       .toolbar {
-        grid-template-columns: 36px 100px minmax(70px, 1fr) 36px;
+        grid-template-columns: 36px 100px minmax(60px, 1fr) 32px 32px;
         gap: 7px;
       }
 
@@ -527,7 +527,7 @@
 
     @media (max-width: 390px) {
       .toolbar {
-        grid-template-columns: 30px 88px minmax(60px, 1fr) 32px;
+        grid-template-columns: 30px 88px minmax(48px, 1fr) 28px 28px;
         gap: 4px;
       }
 
@@ -537,12 +537,13 @@
     }
 
   </style>
+  <link rel="stylesheet" href="assets/styles/premium.css">
 </head>
 <body>
   <main class="page">
     <header class="toolbar">
       <a class="brand" href="home.html" aria-label="ModaSphere home">
-        <img src="assets/images/modasphere-logo.png" alt="">
+        <img src="assets/images/modasphere-logo-brand.png" alt="">
       </a>
       <button
         class="categories-button"
@@ -625,7 +626,41 @@
         <p class="collection-message">Explore the latest ModaSphere collection.</p>
         <a class="return-link" href="home.html">BACK TO HOME</a>
       </div>
+      <section class="catalog-controls" id="catalogControls" aria-label="Filter and sort products" hidden>
+        <label>
+          <span>Search</span>
+          <input id="catalogSearch" type="search" placeholder="Find a piece">
+        </label>
+        <label>
+          <span>Type</span>
+          <select id="typeFilter"><option value="">All types</option></select>
+        </label>
+        <label>
+          <span>Color</span>
+          <select id="colorFilter"><option value="">All colors</option></select>
+        </label>
+        <label>
+          <span>Max price</span>
+          <input id="priceFilter" type="number" min="0" step="100" inputmode="numeric" placeholder="No limit">
+        </label>
+        <label>
+          <span>Sort by</span>
+          <select id="sortOrder">
+            <option value="">Featured</option>
+            <option value="price-ascending">Price: low to high</option>
+            <option value="price-descending">Price: high to low</option>
+            <option value="name">Name: A to Z</option>
+          </select>
+        </label>
+        <button class="clear-catalog-filters" id="clearCatalogFilters" type="button">Clear filters</button>
+        <p id="catalogResultCount" class="catalog-result-count" aria-live="polite"></p>
+      </section>
       <p class="product-status" id="productStatus" role="status" aria-live="polite"></p>
+      <div class="catalog-empty" id="catalogEmpty" hidden>
+        <h2>No pieces match those filters.</h2>
+        <p>Try adjusting your search or clearing the filters.</p>
+        <button class="return-link" id="clearCatalogFiltersEmpty" type="button">Clear filters</button>
+      </div>
       <section class="catalog-grid" id="productGrid" aria-label="Category collection" hidden></section>
     </section>
   </main>
@@ -651,5 +686,11 @@
   <script src="assets/scripts/categories.js"></script>
   <script src="assets/scripts/product-catalog.js"></script>
   <script src="assets/scripts/basket.js"></script>
+  <script src="assets/scripts/wishlist.js"></script>
+  <script>
+    document.getElementById("clearCatalogFiltersEmpty").addEventListener("click", () => {
+      document.getElementById("clearCatalogFilters").click();
+    });
+  </script>
 </body>
 </html>

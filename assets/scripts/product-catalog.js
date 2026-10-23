@@ -166,16 +166,93 @@
     }).format(price);
   }
 
+  const colorOptions = {
+    shirt: [
+      { name: "Black", value: "#202024" },
+      { name: "White", value: "#f0f0ee" },
+      { name: "Navy", value: "#263a5a" },
+      { name: "Forest green", value: "#315b37" }
+    ],
+    dress: [
+      { name: "Burgundy", value: "#79152a" },
+      { name: "Black", value: "#202024" },
+      { name: "Ivory", value: "#e7e4dc" },
+      { name: "Lavender", value: "#9b72df" }
+    ],
+    shoe: [
+      { name: "White", value: "#f0f0ee" },
+      { name: "Black", value: "#202024" },
+      { name: "Navy", value: "#263a5a" },
+      { name: "Gray", value: "#9ba0a9" }
+    ],
+    "formal-shoe": [
+      { name: "Black", value: "#252326" },
+      { name: "Brown", value: "#76513b" },
+      { name: "Burgundy", value: "#4b292b" },
+      { name: "Cognac", value: "#97633e" }
+    ],
+    shorts: [
+      { name: "Black", value: "#202024" },
+      { name: "White", value: "#f0f0ee" },
+      { name: "Navy", value: "#263a5a" },
+      { name: "Mint", value: "#b8ded6" }
+    ],
+    pants: [
+      { name: "Navy", value: "#263a5a" },
+      { name: "Black", value: "#202024" },
+      { name: "Khaki", value: "#b58a57" },
+      { name: "Ivory", value: "#e7e4dc" }
+    ],
+    jacket: [
+      { name: "Black", value: "#202024" },
+      { name: "Navy", value: "#303243" },
+      { name: "Brown", value: "#8c6b4d" },
+      { name: "Cream", value: "#e8d8c7" }
+    ],
+    bag: [
+      { name: "Black", value: "#202024" },
+      { name: "Taupe", value: "#9b8776" },
+      { name: "Espresso", value: "#44322f" },
+      { name: "Burgundy", value: "#531d2b" }
+    ],
+    hat: [
+      { name: "Black", value: "#202024" },
+      { name: "Brown", value: "#8a6658" },
+      { name: "Charcoal", value: "#55545b" },
+      { name: "Navy", value: "#263a5a" }
+    ],
+    socks: [
+      { name: "Black", value: "#202024" },
+      { name: "Ivory", value: "#f1eee2" },
+      { name: "Gray", value: "#b8babc" },
+      { name: "Burgundy", value: "#4a2631" }
+    ]
+  };
+  const apparelTypes = new Set(["shirt", "dress", "shorts", "pants", "jacket"]);
+
+  window.modaSphereGetProductOptions = (product) => ({
+    sizes: product.type === "shoe" || product.type === "formal-shoe"
+      ? Array.from({ length: 10 }, (_, index) => String(index + 36))
+      : apparelTypes.has(product.type)
+        ? ["XS", "S", "M", "L", "XL"]
+        : ["One size"],
+    colors: colorOptions[product.type] || colorOptions.shirt
+  });
+
+  window.modaSphereCollections = collections;
+
   function makeProductCard(product) {
     const card = document.createElement("article");
     card.className = "catalog-product";
 
     const imageFrame = document.createElement("div");
     imageFrame.className = "catalog-product-image";
+    imageFrame.tabIndex = -1;
     if (product.originalPrice) {
       const badge = document.createElement("span");
       badge.className = "sale-badge";
-      badge.textContent = "30% OFF";
+      const discount = Math.round((1 - product.price / product.originalPrice) * 100);
+      badge.textContent = `${discount}% OFF`;
       imageFrame.append(badge);
     }
 
@@ -183,14 +260,35 @@
     image.src = product.image || getProductArt(product.type, product.color);
     image.alt = product.name;
     image.loading = "lazy";
-    imageFrame.append(image);
+    const imageLink = document.createElement("a");
+    imageLink.href = `product.html?id=${encodeURIComponent(product.id)}`;
+    imageLink.setAttribute("aria-label", `View ${product.name} details`);
+    imageLink.append(image);
+    imageFrame.append(imageLink);
     card.append(imageFrame);
 
     const info = document.createElement("div");
     info.className = "catalog-product-info";
+    const actions = document.createElement("div");
+    actions.className = "catalog-product-actions";
     const name = document.createElement("h2");
-    name.textContent = product.name;
-    info.append(name);
+    const nameLink = document.createElement("a");
+    nameLink.href = `product.html?id=${encodeURIComponent(product.id)}`;
+    nameLink.textContent = product.name;
+    name.append(nameLink);
+    actions.append(name);
+    const favorite = document.createElement("button");
+    favorite.className = "favorite-toggle";
+    favorite.type = "button";
+    favorite.dataset.favoriteId = product.id;
+    favorite.dataset.favoriteName = product.name;
+    favorite.dataset.favoritePrice = String(product.price);
+    favorite.dataset.favoriteImage = product.image || image.src;
+    favorite.setAttribute("aria-label", `Save ${product.name} to favorites`);
+    favorite.setAttribute("aria-pressed", "false");
+    favorite.textContent = "♡";
+    actions.append(favorite);
+    info.append(actions);
 
     const price = document.createElement("p");
     price.className = "catalog-product-price";
@@ -201,6 +299,15 @@
       price.append(" ", original);
     }
     info.append(price);
+    const options = window.modaSphereGetProductOptions(product);
+    const availability = document.createElement("p");
+    availability.className = "catalog-product-options";
+    availability.textContent = `${options.sizes.length === 1 && options.sizes[0] === "One size"
+      ? "One size"
+      : product.type === "shoe" || product.type === "formal-shoe"
+        ? `EU ${options.sizes[0]}–${options.sizes[options.sizes.length - 1]}`
+        : `${options.sizes[0]}–${options.sizes[options.sizes.length - 1]}`} · ${options.colors.length} color options`;
+    info.append(availability);
 
     const button = document.createElement("button");
     button.className = "add-to-basket";
@@ -222,7 +329,9 @@
   const products = collections[group]?.[category];
 
   if (!products) {
-    window.location.replace("home.html");
+    if (document.getElementById("productGrid")) {
+      window.location.replace("home.html");
+    }
     return;
   }
 
@@ -233,6 +342,107 @@
 
   const productGrid = document.getElementById("productGrid");
   productGrid.setAttribute("aria-label", `${category} collection`);
-  productGrid.replaceChildren(...products.map(makeProductCard));
-  productGrid.hidden = false;
+  const controls = document.getElementById("catalogControls");
+  const search = document.getElementById("catalogSearch");
+  const typeFilter = document.getElementById("typeFilter");
+  const colorFilter = document.getElementById("colorFilter");
+  const priceFilter = document.getElementById("priceFilter");
+  const sortOrder = document.getElementById("sortOrder");
+  const resultCount = document.getElementById("catalogResultCount");
+  const emptyState = document.getElementById("catalogEmpty");
+  const clearFilters = document.getElementById("clearCatalogFilters");
+
+  function populateFilter(select, values, labelFor) {
+    for (const value of values) {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = labelFor(value);
+      select.append(option);
+    }
+  }
+
+  const types = [...new Set(products.map((product) => product.type))].sort();
+  const colors = [...new Set(products.map((product) => product.color).filter(Boolean))].sort();
+  const typeNames = {
+    "formal-shoe": "Formal shoes",
+    shoe: "Shoes",
+    shorts: "Shorts",
+    shirt: "Tops",
+    dress: "Dresses",
+    jacket: "Jackets",
+    pants: "Pants",
+    bag: "Bags",
+    hat: "Hats",
+    socks: "Socks"
+  };
+  const colorNames = new Map([
+    ["#171719", "Black"], ["#17171a", "Black"], ["#17191c", "Black"],
+    ["#17191e", "Black"], ["#202024", "Black"], ["#202026", "Black"],
+    ["#202126", "Black"], ["#202329", "Black"], ["#202326", "Black"],
+    ["#252326", "Black"], ["#263a5a", "Navy"], ["#303243", "Navy"],
+    ["#315b37", "Green"], ["#44322f", "Brown"], ["#493b36", "Brown"],
+    ["#4a2631", "Burgundy"], ["#4b292b", "Burgundy"], ["#531d2b", "Burgundy"],
+    ["#55545b", "Charcoal"], ["#555462", "Charcoal"], ["#6386a8", "Blue"],
+    ["#7194b2", "Blue"], ["#76513b", "Brown"], ["#80776b", "Taupe"],
+    ["#8a6658", "Brown"], ["#8b6044", "Brown"], ["#8c6b4d", "Brown"],
+    ["#9b72df", "Lavender"], ["#a8d4c8", "Mint"], ["#b8ded6", "Mint"],
+    ["#c82f3a", "Red"], ["#cdeaf2", "Blue"], ["#df7eaa", "Pink"],
+    ["#e8d8c7", "Cream"], ["#e9e3d3", "Ivory"], ["#f0f0ee", "White"],
+    ["#f1eee2", "Ivory"], ["#f4f4f2", "White"], ["#f6f5f0", "White"]
+  ]);
+  populateFilter(typeFilter, types, (value) => typeNames[value] || "Other");
+  const colorLabelCounts = new Map();
+  for (const color of colors) {
+    const label = colorNames.get(color.toLowerCase()) || color.toUpperCase();
+    colorLabelCounts.set(label, (colorLabelCounts.get(label) || 0) + 1);
+  }
+  const colorLabelIndexes = new Map();
+  populateFilter(colorFilter, colors, (value) => {
+    const label = colorNames.get(value.toLowerCase()) || value.toUpperCase();
+    if (colorLabelCounts.get(label) === 1) {
+      return label;
+    }
+    const index = (colorLabelIndexes.get(label) || 0) + 1;
+    colorLabelIndexes.set(label, index);
+    return `${label} (shade ${index})`;
+  });
+
+  function renderProducts() {
+    const query = search.value.trim().toLocaleLowerCase();
+    const maxPrice = priceFilter.value === "" ? Infinity : Number(priceFilter.value);
+    let visible = products.filter((product) =>
+      product.name.toLocaleLowerCase().includes(query) &&
+      (!typeFilter.value || product.type === typeFilter.value) &&
+      (!colorFilter.value || product.color === colorFilter.value) &&
+      product.price <= maxPrice
+    );
+    if (sortOrder.value === "price-ascending") {
+      visible = [...visible].sort((a, b) => a.price - b.price);
+    } else if (sortOrder.value === "price-descending") {
+      visible = [...visible].sort((a, b) => b.price - a.price);
+    } else if (sortOrder.value === "name") {
+      visible = [...visible].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    productGrid.replaceChildren(...visible.map(makeProductCard));
+    resultCount.textContent = `${visible.length} ${visible.length === 1 ? "piece" : "pieces"}`;
+    emptyState.hidden = visible.length > 0;
+    productGrid.hidden = visible.length === 0;
+  }
+
+  for (const control of [search, typeFilter, colorFilter, priceFilter, sortOrder]) {
+    control.addEventListener("input", renderProducts);
+    control.addEventListener("change", renderProducts);
+  }
+  clearFilters.addEventListener("click", () => {
+    search.value = "";
+    typeFilter.value = "";
+    colorFilter.value = "";
+    priceFilter.value = "";
+    sortOrder.value = "";
+    renderProducts();
+    search.focus();
+  });
+
+  controls.hidden = false;
+  renderProducts();
 })();

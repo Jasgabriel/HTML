@@ -442,6 +442,8 @@
 
     .featured-product {
       min-width: 0;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       border: 1px solid #e5e3db;
       border-radius: 16px;
@@ -463,11 +465,14 @@
     }
 
     .featured-product-info {
+      flex: 1;
       padding: 14px;
+      display: flex;
+      flex-direction: column;
     }
 
     .featured-product h3 {
-      min-height: 40px;
+      min-height: 3.75em;
       margin: 0 0 7px;
       color: var(--ink);
       font-family: Georgia, "Times New Roman", serif;
@@ -485,6 +490,7 @@
     .featured-product .add-to-basket {
       width: 100%;
       min-height: 40px;
+      margin-top: auto;
       font-size: 12px;
     }
 
@@ -506,6 +512,31 @@
       text-underline-offset: 2px;
     }
 
+    .basket-toast {
+      position: fixed;
+      z-index: 5;
+      right: 24px;
+      bottom: 24px;
+      max-width: min(420px, calc(100% - 32px));
+      padding: 14px 20px;
+      border-radius: 12px;
+      background: var(--navy);
+      box-shadow: 0 8px 24px #07162d40;
+      color: white;
+      font-size: 14px;
+      line-height: 1.4;
+      opacity: 0;
+      transform: translateY(10px);
+      visibility: hidden;
+      transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+    }
+
+    .basket-toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
+
     dialog {
       width: min(400px, calc(100% - 32px));
       margin: auto;
@@ -523,22 +554,23 @@
       overflow: auto;
       border: 0;
       border-radius: 14px;
-      background: transparent;
+      background: var(--cream);
       box-shadow: 0 18px 50px #07162d55;
     }
 
     .info-dialog h2 {
       width: fit-content;
       min-width: 250px;
-      margin: 0 0 16px;
+      margin: 0 auto 16px;
       padding: 4px 16px 5px;
-      border-radius: 0 12px 12px 0;
+      border-radius: 12px;
       background: var(--navy);
       color: #d4dfeb;
       font-family: Georgia, "Times New Roman", serif;
       font-size: 34px;
       font-weight: bold;
       line-height: 1.1;
+      text-align: center;
     }
 
     .about-copy {
@@ -566,7 +598,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 22px 11%;
-      align-items: center;
+      align-items: stretch;
       padding: 0 1px;
     }
 
@@ -576,15 +608,23 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      gap: 2px;
       border-radius: 12px;
       background: var(--navy);
       color: #f5f1e7;
       text-align: center;
     }
 
-    .contact-card:nth-child(even) {
-      transform: translateY(9px);
+    .contact-card img {
+      width: 88px;
+      height: 88px;
+      flex: 0 0 auto;
+      margin-bottom: 8px;
+      border: 2px solid var(--cream);
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center 30%;
     }
 
     .contact-card strong {
@@ -648,7 +688,7 @@
       }
 
       .toolbar {
-        grid-template-columns: 36px 112px minmax(90px, 1fr) 36px;
+        grid-template-columns: 36px 112px minmax(70px, 1fr) 32px 32px;
         gap: 7px;
       }
 
@@ -722,16 +762,14 @@
         gap: 10px;
       }
 
-      .contact-card,
-      .contact-card:nth-child(even) {
+      .contact-card {
         min-height: 70px;
-        transform: none;
       }
     }
 
     @media (max-width: 390px) {
       .toolbar {
-        grid-template-columns: 30px 92px minmax(75px, 1fr) 30px;
+        grid-template-columns: 30px 92px minmax(52px, 1fr) 28px 28px;
         gap: 4px;
       }
 
@@ -776,12 +814,13 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="assets/styles/premium.css">
 </head>
 <body>
   <main class="storefront">
     <header class="toolbar">
       <a class="brand" href="home.html" aria-label="ModaSphere home">
-        <img src="assets/images/modasphere-logo.png" alt="">
+        <img src="assets/images/modasphere-logo-brand.png" alt="">
       </a>
 
       <button
@@ -892,41 +931,53 @@
       </div>
       <div class="featured-grid">
         <article class="featured-product">
-          <a href="category.html?group=Shoes&amp;category=Originals">
+          <a href="product.html?id=white-blue-retro-sneakers">
             <img src="assets/images/white-blue-retro-sneakers.png" alt="White and Blue Retro Sneakers" loading="lazy">
           </a>
           <div class="featured-product-info">
-            <h3>White and Blue Retro Sneakers</h3>
+            <div class="featured-product-heading">
+              <h3><a href="product.html?id=white-blue-retro-sneakers">White and Blue Retro Sneakers</a></h3>
+              <button class="favorite-toggle" type="button" data-favorite-id="white-blue-retro-sneakers" data-favorite-name="White and Blue Retro Sneakers" data-favorite-price="2700" data-favorite-image="assets/images/white-blue-retro-sneakers.png" aria-label="Save White and Blue Retro Sneakers to favorites" aria-pressed="false">♡</button>
+            </div>
             <p>₱2,700</p>
             <button class="add-to-basket" type="button" data-add-to-basket data-product-id="white-blue-retro-sneakers" data-product-name="White and Blue Retro Sneakers" data-product-price="2700" data-product-image="assets/images/white-blue-retro-sneakers.png">Add to basket</button>
           </div>
         </article>
         <article class="featured-product">
-          <a href="category.html?group=Clothing&amp;category=Dress">
+          <a href="product.html?id=burgundy-spaghetti-strap-dress">
             <img src="assets/images/burgundy-spaghetti-strap-dress.png" alt="Burgundy Spaghetti-Strap Dress" loading="lazy">
           </a>
           <div class="featured-product-info">
-            <h3>Burgundy Spaghetti-Strap Dress</h3>
+            <div class="featured-product-heading">
+              <h3><a href="product.html?id=burgundy-spaghetti-strap-dress">Burgundy Spaghetti-Strap Dress</a></h3>
+              <button class="favorite-toggle" type="button" data-favorite-id="burgundy-spaghetti-strap-dress" data-favorite-name="Burgundy Spaghetti-Strap Dress" data-favorite-price="2450" data-favorite-image="assets/images/burgundy-spaghetti-strap-dress.png" aria-label="Save Burgundy Spaghetti-Strap Dress to favorites" aria-pressed="false">♡</button>
+            </div>
             <p>₱2,450</p>
             <button class="add-to-basket" type="button" data-add-to-basket data-product-id="burgundy-spaghetti-strap-dress" data-product-name="Burgundy Spaghetti-Strap Dress" data-product-price="2450" data-product-image="assets/images/burgundy-spaghetti-strap-dress.png">Add to basket</button>
           </div>
         </article>
         <article class="featured-product">
-          <a href="category.html?group=Clothing&amp;category=Shorts">
+          <a href="product.html?id=mint-striped-shorts">
             <img src="assets/images/mint-striped-shorts.png" alt="Mint Striped Shorts" loading="lazy">
           </a>
           <div class="featured-product-info">
-            <h3>Mint Striped Shorts</h3>
+            <div class="featured-product-heading">
+              <h3><a href="product.html?id=mint-striped-shorts">Mint Striped Shorts</a></h3>
+              <button class="favorite-toggle" type="button" data-favorite-id="mint-striped-shorts" data-favorite-name="Mint Striped Shorts" data-favorite-price="1250" data-favorite-image="assets/images/mint-striped-shorts.png" aria-label="Save Mint Striped Shorts to favorites" aria-pressed="false">♡</button>
+            </div>
             <p>₱1,250</p>
             <button class="add-to-basket" type="button" data-add-to-basket data-product-id="mint-striped-shorts" data-product-name="Mint Striped Shorts" data-product-price="1250" data-product-image="assets/images/mint-striped-shorts.png">Add to basket</button>
           </div>
         </article>
         <article class="featured-product">
-          <a href="category.html?group=Accessories&amp;category=Bags">
+          <a href="product.html?id=espresso-oversized-tote">
             <img src="assets/images/espresso-oversized-tote.png" alt="Espresso Oversized Tote" loading="lazy">
           </a>
           <div class="featured-product-info">
-            <h3>Espresso Oversized Tote</h3>
+            <div class="featured-product-heading">
+              <h3><a href="product.html?id=espresso-oversized-tote">Espresso Oversized Tote</a></h3>
+              <button class="favorite-toggle" type="button" data-favorite-id="espresso-oversized-tote" data-favorite-name="Espresso Oversized Tote" data-favorite-price="2800" data-favorite-image="assets/images/espresso-oversized-tote.png" aria-label="Save Espresso Oversized Tote to favorites" aria-pressed="false">♡</button>
+            </div>
             <p>₱2,800</p>
             <button class="add-to-basket" type="button" data-add-to-basket data-product-id="espresso-oversized-tote" data-product-name="Espresso Oversized Tote" data-product-price="2800" data-product-image="assets/images/espresso-oversized-tote.png">Add to basket</button>
           </div>
@@ -936,9 +987,12 @@
 
     <footer class="footer-links">
       <button type="button" data-dialog="aboutDialog">ABOUT US</button>
+      <button type="button" data-dialog="storeInfoDialog">DELIVERY &amp; RETURNS</button>
       <button type="button" data-dialog="contactDialog">CONTACT US</button>
     </footer>
   </main>
+
+  <p class="basket-toast" id="addToBasketToast" role="status" aria-live="polite" aria-atomic="true"></p>
 
   <dialog class="basket-dialog" id="basketDialog" aria-labelledby="basketTitle">
     <header class="basket-header">
@@ -959,12 +1013,28 @@
   </dialog>
 
   <dialog class="info-dialog" id="aboutDialog" aria-labelledby="aboutTitle">
-    <h2 id="aboutTitle">About Us</h2>
+    <h2 id="aboutTitle" tabindex="-1">About Us</h2>
     <div class="about-copy">
-      <p>Welcome to ModaSphere, an e-commerce destination for people who want to discover stylish, comfortable, and affordable fashion in one place. We believe fashion is a way to express your personality and confidence.</p>
-      <p>At ModaSphere, we offer a variety of clothing, accessories, and fashion essentials to fit different styles and preferences. Our goal is to make online shopping simple, convenient, and enjoyable for everyone.</p>
-      <p>We are committed to providing quality products, easy browsing, and a smooth shopping experience. Whether you are looking for casual, trendy, or special-occasion styles, ModaSphere is here to help you find your style.</p>
-      <p>ModaSphere: discover your style, express yourself.</p>
+      <p>ModaSphere is a fashion concept built around personal style, everyday comfort, and considered details.</p>
+      <p>Explore a curated mix of clothing, footwear, and accessories, with versatile pieces for casual days and special occasions.</p>
+      <p>Discover new combinations, find inspiration, and make the look your own.</p>
+    </div>
+    <div class="dialog-actions">
+      <button class="dialog-close" type="button">Close</button>
+    </div>
+  </dialog>
+
+  <dialog class="info-dialog store-info-dialog" id="storeInfoDialog" aria-labelledby="storeInfoTitle">
+    <h2 id="storeInfoTitle" tabindex="-1">Delivery &amp; returns</h2>
+    <div class="store-info-copy">
+      <section>
+        <h3>Shipping shown at checkout</h3>
+        <p>Checkout displays ₱99 shipping for basket subtotals below ₱2,500 and free shipping from ₱2,500. Orders are not currently fulfilled through this site.</p>
+      </section>
+      <section>
+        <h3>Returns and order support</h3>
+        <p>Purchases and returns are not currently processed through this site. For store questions, email <a href="mailto:modasphere@gmail.com">modasphere@gmail.com</a>.</p>
+      </section>
     </div>
     <div class="dialog-actions">
       <button class="dialog-close" type="button">Close</button>
@@ -972,23 +1042,71 @@
   </dialog>
 
   <dialog class="info-dialog" id="contactDialog" aria-labelledby="contactTitle">
-    <h2 id="contactTitle">Contact Us</h2>
+    <h2 id="contactTitle" tabindex="-1">Contact Us</h2>
     <div class="contact-grid">
       <div class="contact-card">
-        <strong>Facebook:</strong>
-        <span>ModaSphere Official</span>
-      </div>
-      <div class="contact-card">
+        <img src="assets/images/ace-gian-abejero.png" alt="Ace Gian DC. Abejero">
+        <strong>Ace Gian DC. Abejero</strong>
+        <span>Age: 18 years old</span>
         <strong>E-mail:</strong>
-        <a href="mailto:modasphere@gmail.com">modasphere@gmail.com</a>
-      </div>
-      <div class="contact-card">
-        <strong>Instagram:</strong>
-        <a href="https://www.instagram.com/modasphere.offcl.811/" target="_blank" rel="noopener noreferrer">@modasphere.offcl.811</a>
-      </div>
-      <div class="contact-card">
+        <a href="mailto:acegianabejero@gmail.com">acegianabejero@gmail.com</a>
+        <a href="mailto:qagabejero26@tip.edu.ph">qagabejero26@tip.edu.ph</a>
         <strong>Contact Number:</strong>
-        <a href="tel:+639175552026">+63 917 555 2026</a>
+        <a href="tel:+639614608915">09614608915</a>
+        <span>Section: CYB11S1</span>
+      </div>
+      <div class="contact-card">
+        <img src="assets/images/macunat-jash-gabriel.png" alt="Macunat Jash Gabriel O.">
+        <strong>Macunat Jash Gabriel O.</strong>
+        <span>Age: 18</span>
+        <strong>E-mail:</strong>
+        <a href="mailto:macunatjashgabiel@gmail.com">macunatjashgabiel@gmail.com</a>
+        <strong>Contact Number:</strong>
+        <a href="tel:+639940135973">09940135973</a>
+        <span>Section: CYB11S1</span>
+      </div>
+      <div class="contact-card">
+        <img src="assets/images/gianxander-libunao.png" alt="Gianxander V. Libunao">
+        <strong>Gianxander V. Libunao</strong>
+        <span>Age: 18</span>
+        <strong>E-mail:</strong>
+        <a href="mailto:libunaogianxander@gmail.com">libunaogianxander@gmail.com</a>
+        <a href="mailto:qglibunao26@tip.edu.ph">qglibunao26@tip.edu.ph</a>
+        <strong>Contact Number:</strong>
+        <a href="tel:+639063238864">09063238864</a>
+        <span>Section: CYB11S1</span>
+      </div>
+      <div class="contact-card">
+        <img src="assets/images/sean-meako-san-pedro.png" alt="Sean Meako O. San Pedro">
+        <strong>Sean Meako O. San Pedro</strong>
+        <span>Age: 19</span>
+        <strong>E-mail:</strong>
+        <a href="mailto:qsmsanpedro26@tip.edu.ph">qsmsanpedro26@tip.edu.ph</a>
+        <strong>Contact Number:</strong>
+        <a href="tel:+639156230073">09156230073</a>
+        <span>Section: CYB11S1</span>
+      </div>
+      <div class="contact-card">
+        <img src="assets/images/kenard-gabriel-maderazo.png" alt="Kenard Gabriel L. Maderazo">
+        <strong>Kenard Gabriel L. Maderazo</strong>
+        <span>Age: 19 years old</span>
+        <strong>E-mail:</strong>
+        <a href="mailto:kengabmade2007@gmail.com">kengabmade2007@gmail.com</a>
+        <a href="mailto:qkgmaderazo26@tip.edu.ph">qkgmaderazo26@tip.edu.ph</a>
+        <strong>Contact Number:</strong>
+        <a href="tel:+639605127230">09605127230</a>
+        <span>Section: CYB11S1</span>
+      </div>
+      <div class="contact-card">
+        <img src="assets/images/mazekela-del-rosario.png" alt="Mazekela H. Del Rosario">
+        <strong>Mazekela H. Del Rosario</strong>
+        <span>Age: 18 years old</span>
+        <strong>E-mail:</strong>
+        <a href="mailto:delrosariomazekela@gmail.com">delrosariomazekela@gmail.com</a>
+        <a href="mailto:qmdelrosario26@tip.edu.ph">qmdelrosario26@tip.edu.ph</a>
+        <strong>Contact Number:</strong>
+        <a href="tel:+639065053688">09065053688</a>
+        <span>Section: CYB11S1</span>
       </div>
     </div>
     <div class="dialog-actions">
@@ -1000,7 +1118,9 @@
   <script>
     document.querySelectorAll("[data-dialog]").forEach((button) => {
       button.addEventListener("click", () => {
-        document.getElementById(button.dataset.dialog).showModal();
+        const dialog = document.getElementById(button.dataset.dialog);
+        dialog.showModal();
+        dialog.querySelector("h2").focus({ preventScroll: true });
       });
     });
 
@@ -1012,5 +1132,6 @@
 
   </script>
   <script src="assets/scripts/basket.js"></script>
+  <script src="assets/scripts/wishlist.js"></script>
 </body>
 </html>

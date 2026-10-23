@@ -242,6 +242,7 @@
     }
 
     .field input,
+    .field select,
     .field textarea {
       width: 100%;
       border: 1px solid #dce4f0;
@@ -255,14 +256,31 @@
     }
 
     .field input:focus,
+    .field select:focus,
     .field textarea:focus {
       border-color: var(--blue);
       box-shadow: 0 0 0 3px #246bfe17;
     }
 
     .field input.invalid,
+    .field select.invalid,
     .field textarea.invalid {
       border-color: #df5264;
+    }
+
+    .phone-input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .phone-input-group select {
+      flex: 0 0 44%;
+      min-width: 0;
+    }
+
+    .phone-input-group input {
+      flex: 1;
+      min-width: 0;
     }
 
     .field textarea {
@@ -368,8 +386,17 @@
       background: #f8faff;
     }
 
-    .card-fields .field-grid {
+    .card-fields .field-grid,
+    .ewallet-fields .field-grid {
       margin-top: 14px;
+    }
+
+    .ewallet-fields {
+      margin-top: 17px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #f8faff;
     }
 
     .place-order {
@@ -799,18 +826,19 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="assets/styles/premium.css">
 </head>
 <body>
   <header class="checkout-header">
     <a class="checkout-logo" href="home.html">
-      <img src="assets/images/modasphere-logo.png" alt="">
+      <img src="assets/images/modasphere-logo-brand.png" alt="">
       <span>MODASPHERE</span>
     </a>
     <nav class="checkout-nav" aria-label="Checkout navigation">
       <a href="home.html">Shop</a>
       <a href="#checkout" class="active">Checkout</a>
     </nav>
-    <div class="secure">🔒 Demo checkout</div>
+    <div class="secure">Order preview</div>
   </header>
 
   <main class="checkout-container" id="checkout">
@@ -850,7 +878,69 @@
               </label>
               <label class="field full">
                 Phone number <span class="required">*</span>
-                <input id="phone" type="tel" autocomplete="tel" placeholder="+63 912 345 6789" required>
+                <div class="phone-input-group">
+                  <select id="phoneCountry" aria-label="Country for phone number" required>
+                    <option value="AE">+971 United Arab Emirates</option>
+                    <option value="AR">+54 Argentina</option>
+                    <option value="AU">+61 Australia</option>
+                    <option value="AT">+43 Austria</option>
+                    <option value="BD">+880 Bangladesh</option>
+                    <option value="BE">+32 Belgium</option>
+                    <option value="BR">+55 Brazil</option>
+                    <option value="KH">+855 Cambodia</option>
+                    <option value="CA">+1 Canada</option>
+                    <option value="CL">+56 Chile</option>
+                    <option value="CN">+86 China</option>
+                    <option value="CO">+57 Colombia</option>
+                    <option value="CZ">+420 Czechia</option>
+                    <option value="DK">+45 Denmark</option>
+                    <option value="EG">+20 Egypt</option>
+                    <option value="FI">+358 Finland</option>
+                    <option value="FR">+33 France</option>
+                    <option value="DE">+49 Germany</option>
+                    <option value="GH">+233 Ghana</option>
+                    <option value="GR">+30 Greece</option>
+                    <option value="HK">+852 Hong Kong</option>
+                    <option value="IN">+91 India</option>
+                    <option value="ID">+62 Indonesia</option>
+                    <option value="IE">+353 Ireland</option>
+                    <option value="IL">+972 Israel</option>
+                    <option value="IT">+39 Italy</option>
+                    <option value="JP">+81 Japan</option>
+                    <option value="KE">+254 Kenya</option>
+                    <option value="KR">+82 South Korea</option>
+                    <option value="KW">+965 Kuwait</option>
+                    <option value="MY">+60 Malaysia</option>
+                    <option value="MX">+52 Mexico</option>
+                    <option value="NL">+31 Netherlands</option>
+                    <option value="NP">+977 Nepal</option>
+                    <option value="NZ">+64 New Zealand</option>
+                    <option value="NG">+234 Nigeria</option>
+                    <option value="NO">+47 Norway</option>
+                    <option value="PK">+92 Pakistan</option>
+                    <option value="PH" selected>+63 Philippines</option>
+                    <option value="PL">+48 Poland</option>
+                    <option value="PT">+351 Portugal</option>
+                    <option value="QA">+974 Qatar</option>
+                    <option value="SA">+966 Saudi Arabia</option>
+                    <option value="SG">+65 Singapore</option>
+                    <option value="ZA">+27 South Africa</option>
+                    <option value="ES">+34 Spain</option>
+                    <option value="LK">+94 Sri Lanka</option>
+                    <option value="SE">+46 Sweden</option>
+                    <option value="CH">+41 Switzerland</option>
+                    <option value="TW">+886 Taiwan</option>
+                    <option value="TH">+66 Thailand</option>
+                    <option value="TR">+90 Türkiye</option>
+                    <option value="UA">+380 Ukraine</option>
+                    <option value="GB">+44 United Kingdom</option>
+                    <option value="US">+1 United States</option>
+                    <option value="VN">+84 Vietnam</option>
+                  </select>
+                  <input id="phone" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="20" placeholder="912 345 6789" required>
+                </div>
+                <small class="error" id="phoneCountryError"></small>
+                <small class="hint">Choose the country where this phone number is registered.</small>
                 <small class="error" id="phoneError"></small>
               </label>
             </div>
@@ -906,36 +996,60 @@
               <span class="panel-number">03</span>
               <div>
                 <h2>Payment method</h2>
-                <p>Choose how you would like to pay. Demo only; no payment is collected.</p>
+                <p>Payments are not connected. This preview does not collect or process payment.</p>
               </div>
             </div>
             <div class="payment-options">
               <label class="payment-option selected">
                 <input type="radio" name="payment" value="card" checked>
                 <span class="payment-icon">▰</span>
-                <span><b>Credit / Debit Card</b><small>Demo card fields only — do not enter real details</small></span>
+                <span><b>Credit / Debit Card</b><small>Preview only — never enter real card details</small></span>
               </label>
               <label class="payment-option">
                 <input type="radio" name="payment" value="cod">
                 <span class="payment-icon">₱</span>
-                <span><b>Cash on Delivery</b><small>Pay when your order arrives</small></span>
+                <span><b>Cash on Delivery</b><small>Unavailable — orders are not being fulfilled</small></span>
               </label>
               <label class="payment-option">
                 <input type="radio" name="payment" value="ewallet">
                 <span class="payment-icon">▣</span>
-                <span><b>E-wallet</b><small>GCash / Maya demo selection</small></span>
+                <span><b>E-wallet</b><small>GCash / Maya selection only — no payment is sent</small></span>
               </label>
+            </div>
+            <div id="ewalletFields" class="ewallet-fields hidden">
+              <p class="hint">Preview only. Do not enter real account details. Nothing is charged or sent.</p>
+              <div class="field-grid">
+                <label class="field">
+                  E-wallet provider <span class="required">*</span>
+                  <select id="ewalletProvider">
+                    <option value="">Choose a provider</option>
+                    <option value="gcash">GCash</option>
+                    <option value="maya">Maya</option>
+                  </select>
+                  <small class="error" id="ewalletProviderError"></small>
+                </label>
+                <label class="field">
+                  Account name <span class="required">*</span>
+                  <input id="ewalletName" autocomplete="off" maxlength="80" placeholder="Account name">
+                  <small class="error" id="ewalletNameError"></small>
+                </label>
+                <label class="field full">
+                  E-wallet mobile number <span class="required">*</span>
+                  <input id="ewalletNumber" type="tel" inputmode="tel" autocomplete="off" maxlength="20" placeholder="09XX XXX XXXX">
+                  <small class="error" id="ewalletNumberError"></small>
+                </label>
+              </div>
             </div>
             <div id="cardFields" class="card-fields">
               <div class="field-grid">
                 <label class="field full">
                   Name on card
-                  <input id="cardName" autocomplete="off" placeholder="Sample Customer">
+                  <input id="cardName" autocomplete="off" placeholder="Name on card">
                 </label>
                 <label class="field full">
                   Card number
                   <input id="cardNumber" inputmode="numeric" autocomplete="off" maxlength="19" placeholder="1234 5678 9012 3456">
-                  <small class="hint">Demo only. Never enter real card information. Card details are not saved.</small>
+                  <small class="hint">Preview only. Never enter real card information. Card details are not saved.</small>
                   <small class="error" id="cardNumberError"></small>
                 </label>
                 <label class="field">
@@ -959,11 +1073,11 @@
           <small class="error" id="termsError"></small>
 
           <button type="submit" class="place-order" id="placeOrder">
-            Place demo order
+            Review order preview
             <span id="buttonTotal">₱0.00</span>
             <span aria-hidden="true">→</span>
           </button>
-          <div class="disclaimer">Demo checkout only. No real payment, order, or shipment will be processed.</div>
+          <div class="disclaimer">Order preview only. No purchase, payment, or shipment will be created.</div>
         </form>
       </section>
 
@@ -983,7 +1097,7 @@
             <input id="promoCode" placeholder="Promo code" aria-label="Promo code">
             <button type="submit">Apply</button>
           </form>
-          <p class="promo-message" id="promoMessage">Try <b>BLUE10</b> for 10% off your items.</p>
+          <p class="promo-message" id="promoMessage">Preview code <b>BLUE10</b> applies 10% off this order preview.</p>
 
           <div class="totals">
             <div><span>Subtotal</span><strong id="subtotal">₱0.00</strong></div>
@@ -993,7 +1107,7 @@
           </div>
           <div class="delivery">
             <span class="delivery-icon" aria-hidden="true">✦</span>
-            <div><b>Delivery estimate</b><small>Estimated arrival in 3–5 business days.</small></div>
+            <div><b>Delivery estimate</b><small>3–5 business days shown for reference; no delivery is scheduled.</small></div>
           </div>
           <div class="trust">🔒 Your basket stays on this device.</div>
         </section>
@@ -1001,7 +1115,7 @@
     </div>
 
     <footer class="checkout-footer">
-      Demo checkout — no real payment or shipment is created.
+      Order preview only — no payment or shipment is created.
       <a href="mailto:modasphere@gmail.com">Contact ModaSphere</a>
     </footer>
   </main>
@@ -1010,12 +1124,12 @@
   <section class="success-modal hidden" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
     <div class="success-box">
       <div class="success-check" aria-hidden="true">✓</div>
-      <div class="eyebrow">DEMO ORDER CONFIRMED</div>
-      <h2 id="successTitle">You’re all set!</h2>
-      <p id="successText">Your demo order has been created.</p>
-      <div class="order-id">DEMO ORDER ID: <span id="orderId"></span></div>
+      <div class="eyebrow">ORDER PREVIEW</div>
+      <h2 id="successTitle">Preview complete</h2>
+      <p id="successText">This is not a confirmed purchase. No payment was processed or shipment arranged.</p>
+      <div class="order-id">PREVIEW REFERENCE: <span id="orderId"></span></div>
       <button type="button" id="continueShopping" class="place-order">Continue shopping →</button>
-      <small>No actual payment or shipment was created.</small>
+      <small>No purchase, payment, or shipment was created.</small>
     </div>
   </section>
 
@@ -1029,8 +1143,9 @@
       const checkoutAlert = document.getElementById("checkoutAlert");
       const toast = document.getElementById("toast");
       const cardFields = document.getElementById("cardFields");
+      const ewalletFields = document.getElementById("ewalletFields");
       const fieldIds = [
-        "email", "phone", "firstName", "lastName",
+        "email", "phoneCountry", "phone", "firstName", "lastName",
         "address", "city", "postal", "instructions"
       ];
       const organizedImageNames = new Set([
@@ -1147,6 +1262,15 @@
           const price = document.createElement("small");
           price.textContent = `${money(item.price)} each`;
           info.append(price);
+          if (item.size || item.color) {
+            const options = document.createElement("small");
+            options.className = "checkout-item-options";
+            options.textContent = [
+              item.size ? `Size: ${item.size}` : "",
+              item.color ? `Color: ${item.color}` : ""
+            ].filter(Boolean).join(" · ");
+            info.append(options);
+          }
 
           const quantity = document.createElement("div");
           quantity.className = "quantity-controls";
@@ -1190,7 +1314,12 @@
         let valid = true;
         const requiredFields = [
           ["email", (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()), "Enter a valid email address."],
-          ["phone", (value) => /^[+()\d\s-]{7,20}$/.test(value.trim()), "Enter a valid phone number."],
+          ["phoneCountry", (value) => Boolean(value), "Choose the country for your phone number."],
+          ["phone", (value) => {
+            const phone = value.trim();
+            const digitCount = (phone.match(/\d/g) || []).length;
+            return /^[()\d\s-]+$/.test(phone) && digitCount >= 7 && digitCount <= 15;
+          }, "Enter a valid phone number."],
           ["firstName", (value) => value.trim().length >= 2, "Enter your first name."],
           ["lastName", (value) => value.trim().length >= 2, "Enter your last name."],
           ["address", (value) => value.trim().length >= 5, "Enter your street address."],
@@ -1216,14 +1345,35 @@
             Number(expiry.slice(0, 2)) <= 12;
           const cvvValid = /^\d{3,4}$/.test(cvv);
 
-          setError("cardNumber", cardValid ? "" : "Enter a 13–16 digit demo card number.");
+          setError("cardNumber", cardValid ? "" : "Enter a 13–16 digit number for this preview.");
           setError("expiry", expiryValid ? "" : "Enter a valid expiry month as MM/YY.");
-          setError("cvv", cvvValid ? "" : "Enter a 3–4 digit demo security code.");
+          setError("cvv", cvvValid ? "" : "Enter a 3–4 digit security code for this preview.");
           valid = valid && cardValid && expiryValid && cvvValid;
         } else {
           setError("cardNumber", "");
           setError("expiry", "");
           setError("cvv", "");
+        }
+
+        if (selectedPayment === "ewallet") {
+          const provider = document.getElementById("ewalletProvider").value;
+          const accountName = document.getElementById("ewalletName").value.trim();
+          const walletNumber = document.getElementById("ewalletNumber").value.trim();
+          const digitCount = (walletNumber.match(/\d/g) || []).length;
+          const providerValid = provider === "gcash" || provider === "maya";
+          const nameValid = accountName.length >= 2;
+          const numberValid = /^[()\d\s-]+$/.test(walletNumber) &&
+            digitCount >= 7 &&
+            digitCount <= 15;
+
+          setError("ewalletProvider", providerValid ? "" : "Choose GCash or Maya.");
+          setError("ewalletName", nameValid ? "" : "Enter the e-wallet account name.");
+          setError("ewalletNumber", numberValid ? "" : "Enter a valid e-wallet mobile number.");
+          valid = valid && providerValid && nameValid && numberValid;
+        } else {
+          setError("ewalletProvider", "");
+          setError("ewalletName", "");
+          setError("ewalletNumber", "");
         }
 
         const termsAccepted = document.getElementById("terms").checked;
@@ -1317,12 +1467,25 @@
             );
           }
           cardFields.classList.toggle("hidden", radio.value !== "card" || !radio.checked);
+          ewalletFields.classList.toggle("hidden", radio.value !== "ewallet" || !radio.checked);
         });
       });
 
       document.getElementById("cardNumber").addEventListener("input", (event) => {
         const digits = event.target.value.replace(/\D/g, "").slice(0, 16);
         event.target.value = digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+      });
+
+      document.getElementById("phone").addEventListener("input", (event) => {
+        event.target.value = event.target.value
+          .replace(/[^\d()\s-]/g, "")
+          .slice(0, 20);
+      });
+
+      document.getElementById("ewalletNumber").addEventListener("input", (event) => {
+        event.target.value = event.target.value
+          .replace(/[^\d()\s-]/g, "")
+          .slice(0, 20);
       });
 
       document.getElementById("expiry").addEventListener("input", (event) => {
@@ -1420,7 +1583,7 @@
           const orderId = `MS-${Math.floor(100000 + Math.random() * 900000)}`;
           document.getElementById("orderId").textContent = orderId;
           document.getElementById("successText").textContent =
-            `Thank you, ${firstName}! Your demo order total is ${money(totals.total)}. No payment was processed.`;
+            `Thank you, ${firstName}. Your order preview total is ${money(totals.total)}. This is not a confirmed purchase; no payment was processed.`;
 
           clearBasket();
           document.getElementById("cardNumber").value = "";
@@ -1428,7 +1591,7 @@
           document.getElementById("cvv").value = "";
           document.getElementById("successModal").classList.remove("hidden");
         } catch (error) {
-          checkoutAlert.textContent = `Could not complete the demo checkout: ${error.message}`;
+          checkoutAlert.textContent = `Could not complete the order preview: ${error.message}`;
         }
       });
 

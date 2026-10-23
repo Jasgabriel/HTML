@@ -7,8 +7,10 @@
   const basketTotal = document.getElementById("basketTotal");
   const basketCount = document.querySelector(".basket-count");
   const productStatus = document.getElementById("productStatus");
+  const addToBasketToast = document.getElementById("addToBasketToast");
   const bagButtons = document.querySelectorAll("[data-bag-button]");
   const checkoutButton = document.querySelector("[data-go-checkout]");
+  let toastTimeout;
   const organizedImageNames = new Set([
     "classic-beige-fedora.png",
     "brown-flat-cap.png",
@@ -94,7 +96,17 @@
 
     const price = document.createElement("p");
     price.textContent = `${formatPrice(item.price)} each`;
-    details.append(price);
+    if (item.size || item.color) {
+      const options = document.createElement("small");
+      options.className = "basket-item-options";
+      options.textContent = [
+        item.size ? `Size: ${item.size}` : "",
+        item.color ? `Color: ${item.color}` : ""
+      ].filter(Boolean).join(" · ");
+      details.append(name, price, options);
+    } else {
+      details.append(name, price);
+    }
 
     const controls = document.createElement("div");
     controls.className = "basket-item-controls";
@@ -159,16 +171,21 @@
 
   function addProduct(button) {
     const product = {
-      id: button.dataset.productId,
+      productId: button.dataset.productId,
       name: button.dataset.productName,
       image: button.dataset.productImage,
-      price: Number(button.dataset.productPrice)
+      price: Number(button.dataset.productPrice),
+      size: button.dataset.productSize || "",
+      color: button.dataset.productColor || ""
     };
 
-    if (!product.id || !product.name || !product.image || !Number.isFinite(product.price) || product.price < 0) {
+    if (!product.productId || !product.name || !product.image || !Number.isFinite(product.price) || product.price < 0) {
       throw new Error("This product cannot be added because its details are incomplete.");
     }
 
+    product.id = product.size || product.color
+      ? `${product.productId}::${product.size}::${product.color}`
+      : product.productId;
     updateBasket((items) => {
       const existing = items.find((item) => item.id === product.id);
       if (existing) {
@@ -180,6 +197,14 @@
     });
 
     showStatus(`${product.name} added to your basket.`, productStatus);
+    if (addToBasketToast) {
+      addToBasketToast.textContent = `${product.name} added to your basket.`;
+      addToBasketToast.classList.add("is-visible");
+      window.clearTimeout(toastTimeout);
+      toastTimeout = window.setTimeout(() => {
+        addToBasketToast.classList.remove("is-visible");
+      }, 2600);
+    }
   }
 
   for (const button of bagButtons) {
